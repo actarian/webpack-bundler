@@ -1,6 +1,17 @@
+/**/
+
+/*
+@import "~/slick-carousel/slick/slick.scss";
+@import "~/slick-carousel/slick/slick-theme.scss";
+*/
+
+@import "~bootstrap/scss/bootstrap.scss";
 @import "variables";
 @import "mixins";
 @import "components/layout";
+@import "components/typography";
+/**/
+
 /*
 @import "components/animations";
 @import "components/buttons";

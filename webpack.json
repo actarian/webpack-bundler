@@ -1,0 +1,10 @@
+{
+    "entry": {
+        "a": "aaaa"
+    },
+    "output": {
+        "path": "docs",
+        "filename": "[name].js",
+        "sourceMapFilename": "[name].js.map"
+    }
+}
