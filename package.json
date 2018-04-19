@@ -10,8 +10,8 @@
     "scripts": {
         "test": "echo \"No test specified.. exit\" && exit 1",
         "build": "webpack -d --display-modules",
-        "watch": "webpack -d --watch",
-        "serve": "webpack-dev-server -d --open"
+        "watch": "webpack -d --display-modules --watch",
+        "serve": "webpack-dev-server -d --display-modules --open"
     },
     "devDependencies": {
         "autoprefixer": "^8.3.0",
@@ -24,6 +24,7 @@
         "postcss-cli": "^5.0.0",
         "postcss-loader": "^2.1.4",
         "precss": "^3.1.2",
+        "raw-loader": "^0.5.1",
         "sass-loader": "^7.0.1",
         "style-loader": "^0.20.3",
         "uglifyjs-webpack-plugin": "^1.2.4",

@@ -1,4 +1,6 @@
-/* jshint esversion: 6 */
+/* jshint esversion: 6, node: true */
+
+'use strict';
 
 const path = require('path');
 const webpack = require('webpack'); // to access built-in plugins
@@ -11,13 +13,61 @@ const postcss = require('postcss');
 const json = require('./webpack.json');
 console.log('json', json.entry);
 
+const mode = process.env.NODE_ENV;
+const production = mode === 'production';
+const development = mode === 'development';
+
 const sassPlugin = new ExtractTextPlugin({
-    filename: 'css/[name].css'
+    filename: 'css/[name].css',
 });
 
+const sassRule = {
+    test: /\.(css|sass|scss)$/,
+    use: sassPlugin.extract({
+        fallback: 'style-loader',
+        // use: 'css-loader!sass-loader',
+        use: [{
+                loader: "css-loader", // translates CSS into CommonJS
+                options: {
+                    sourceMap: true
+                }
+            },
+            /* {
+                loader: 'postcss-loader', // Run post css actions
+                options: {
+                    plugins: function () { // post css plugins, can be exported to postcss.config.js
+                        return [
+                            // require('precss'),
+                            require('autoprefixer')
+                        ];
+                    },
+                    sourceMap: true
+                }
+            }, */
+            {
+                loader: 'sass-loader', // compiles Sass to CSS
+                options: {
+                    sourceMap: true
+                }
+            },
+        ],
+        // use style-loader in development
+        // fallback: "style-loader",
+    }),
+    exclude: /\.(eot|woff|woff2|ttf|svg)(\?[\s\S]+)?$/,
+};
+
+const cssUrlResolver = {
+    test: /\.css$/,
+    use: ['style-loader', 'css-loader', 'resolve-url-loader']
+};
+
+const sassUrlResolver = {
+    test: /\.(sass|scss)$/,
+    use: ['style-loader', 'css-loader', 'resolve-url-loader', 'sass-loader?sourceMap']
+};
+
 const config = {
-    devtool: 'source-map',
-    mode: 'development', // 'production'
     entry: {
         style: './src/scss/app.scss',
         vendors: './src/vendors/vendors.js',
@@ -25,83 +75,60 @@ const config = {
     },
     output: {
         path: path.resolve(__dirname, 'docs'),
-        filename: '[name].js',
-        sourceMapFilename: '[name].js.map',
+        publicPath: '/',
+        filename: development ? '[name].js' : '[name].[hash].js',
+        sourceMapFilename: development ? '[name].js.map' : '[name].[hash].js.map',
+        chunkFilename: development ? '[name].js' : '[name].chunk.[hash].js',
     },
-    module: {
-        rules: [{
-            test: /\.scss$/,
-            use: sassPlugin.extract({
-                fallback: "style-loader",
-                use: [{
-                        loader: "css-loader", // translates CSS into CommonJS
-                        /*
-                        options: {
-                            sourceMap: true
-                        }
-                        */
-                    }, {
-                        loader: 'sass-loader', // compiles Sass to CSS
-                        options: {
-                            sourceMap: true
-                        }
-                    },
-                    /*{
-                                       loader: 'postcss-loader', // Run post css actions
-                                       options: {
-                                           plugins: function () { // post css plugins, can be exported to postcss.config.js
-                                               return [
-                                                   // require('precss'),
-                                                   require('autoprefixer')
-                                               ];
-                                           },
-                                           sourceMap: true
-                                       }
-                                   }*/
-                ]
-            })
-        }, {
-            test: /\.(woff|woff2|eot|ttf|svg)$/,
-            exclude: /node_modules/,
-            use: [{
-                loader: 'url-loader',
-                options: {
-                    limit: 10240,
-                    mimetype: 'application/octet-stream',
-                    fallback: 'file-loader',
-                }
-            }, {
-                loader: 'file-loader',
-                options: {
-                    useRelativePath: true,
-                    name: 'fonts/[name].[ext]',
-                }
-            }]
-        }, {
-            test: /\.(svg|jpg|jpeg|gif|png)$/,
-            exclude: /node_modules/,
-            use: [{
-                loader: 'url-loader',
-                options: {
-                    limit: 10240,
-                    fallback: 'file-loader',
-                }
-            }, {
-                loader: 'file-loader',
-                options: {
-                    useRelativePath: true,
-                    name: 'img/[name].[ext]',
-                }
-            }]
-        }, {
-            test: /\.txt$/,
-            use: 'raw-loader'
-        }]
-    },
+    devtool: development ? 'inline-source-map' : 'source-map',
+    mode: mode,
     resolve: {
+        extensions: ['.js', '.scss'],
         alias: {
             jquery: "jquery/src/jquery"
         }
+    },
+    module: {
+        rules: [
+            sassRule,
+            {
+                test: /\.(woff|woff2|eot|ttf|svg)$/,
+                exclude: /node_modules/,
+                use: [{
+                    loader: 'url-loader',
+                    options: {
+                        limit: 10240,
+                        mimetype: 'application/octet-stream',
+                        fallback: 'file-loader',
+                    }
+                }, {
+                    loader: 'file-loader',
+                    options: {
+                        useRelativePath: true,
+                        name: 'fonts/[name].[ext]',
+                    }
+                }]
+            }, {
+                test: /\.(svg|jpg|jpeg|gif|png)$/,
+                exclude: /node_modules/,
+                use: [{
+                    loader: 'url-loader',
+                    options: {
+                        limit: 10240,
+                        fallback: 'file-loader',
+                    }
+                }, {
+                    loader: 'file-loader',
+                    options: {
+                        useRelativePath: true,
+                        name: 'img/[name].[ext]',
+                    }
+                }]
+            }, {
+                test: /\.txt$/,
+                use: 'raw-loader'
+            }
+        ]
     },
     devServer: {
         open: true, // will open the browser
@@ -150,5 +177,19 @@ const config = {
     ]
     */
 };
+
+/*
+exports.scssprod = {
+test: /\.scss$/,
+loader: ExtractTextPlugin.extract('css?sourceMap&modules&importLoaders=2&localIdentName=[name]__[local]!resolve-url!sass?config=sassLoader'),
+exclude: /\.(eot|woff|woff2|ttf|svg)(\?[\s\S]+)?$/
+};
+
+exports.scssdev = {
+    test: /\.scss$/,
+    loader: 'style!css?sourceMap&modules&importLoaders=2&localIdentName=[name]__[local]!resolve-url!sass?config=sassLoader',
+    exclude: /node_modules/,
+};
+*/
 
 module.exports = config;
