@@ -9,9 +9,9 @@
     "homepage": "https://github.com/actarian/webpack-bundler/blob/master/README.md",
     "scripts": {
         "test": "echo \"No test specified.. exit\" && exit 1",
-        "build": "webpack -d --display-modules",
-        "watch": "webpack -d --display-modules --watch",
-        "serve": "webpack-dev-server -d --display-modules --open"
+        "build": "webpack --display-modules",
+        "watch": "webpack --display-modules --watch",
+        "serve": "webpack-dev-server --display-modules --open"
     },
     "devDependencies": {
         "autoprefixer": "^8.3.0",
@@ -25,8 +25,11 @@
         "postcss-loader": "^2.1.4",
         "precss": "^3.1.2",
         "raw-loader": "^0.5.1",
+        "resolve-url-loader": "^2.3.0",
         "sass-loader": "^7.0.1",
         "style-loader": "^0.20.3",
+        "stylelint": "^9.2.0",
+        "stylelint-webpack-plugin": "^0.10.4",
         "uglifyjs-webpack-plugin": "^1.2.4",
         "url-loader": "^1.0.1",
         "webpack": "^4.5.0",

@@ -35,8 +35,6 @@
 }
 
 @mixin revealRimIdle() {
-    shape-padding: 20px;
-    shape-inside: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
     clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
     -webkit-clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
 }
@@ -46,12 +44,10 @@
         @include revealRimIdle();
     }
     50% {
-        shape-inside: polygon(50% 0, 100% 0, 100% 100%, 0 100%);
         clip-path: polygon(50% 0, 100% 0, 100% 100%, 0 100%);
         -webkit-clip-path: polygon(50% 0, 100% 0, 100% 100%, 0 100%);
     }
     100% {
-        shape-inside: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
         clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
         -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
     }
@@ -59,17 +55,14 @@
 
 @keyframes revealRim {
     0% {
-        shape-inside: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
         clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
         -webkit-clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
     }
     50% {
-        shape-inside: polygon(100% 0, 100% 0, 100% 100%, 0 100%);
         clip-path: polygon(100% 0, 100% 0, 100% 100%, 0 100%);
         -webkit-clip-path: polygon(100% 0, 100% 0, 100% 100%, 0 100%);
     }
     100% {
-        shape-inside: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
         clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
         -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
     }
@@ -90,8 +83,6 @@
 }
 
 @mixin revealDiscIdle() {
-    shape-padding: 20px;
-    shape-inside: polygon(0 0, 50% 0, 50% 100%, 0 100%);
     clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
     -webkit-clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
 }
@@ -101,12 +92,10 @@
         @include revealDiscIdle();
     }
     50% {
-        shape-inside: polygon(0 0, 50% 0, 100% 100%, 0 100%);
         clip-path: polygon(0 0, 50% 0, 100% 100%, 0 100%);
         -webkit-clip-path: polygon(0 0, 50% 0, 100% 100%, 0 100%);
     }
     100% {
-        shape-inside: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
         clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
         -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
     }
@@ -114,17 +103,14 @@
 
 @keyframes revealDisc {
     0% {
-        shape-inside: polygon(0 0, 0 0, 0 100%, 0 100%);
         clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
         -webkit-clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
     }
     50% {
-        shape-inside: polygon(0 0, 0 0, 100% 100%, 0 100%);
         clip-path: polygon(0 0, 0 0, 100% 100%, 0 100%);
         -webkit-clip-path: polygon(0 0, 0 0, 100% 100%, 0 100%);
     }
     100% {
-        shape-inside: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
         clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
         -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
     }

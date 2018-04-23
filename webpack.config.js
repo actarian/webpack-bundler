@@ -2,23 +2,28 @@
 
 'use strict';
 
+// requires
 const path = require('path');
 const webpack = require('webpack'); // to access built-in plugins
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // installed via npm
+const StyleLintPlugin = require('stylelint-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const autoprefixer = require('autoprefixer');
 const postcss = require('postcss');
 
+// configuration
 const json = require('./webpack.json');
-console.log('json', json.entry);
-
-const mode = process.env.NODE_ENV;
+const src = './src/';
+const dist = path.join(__dirname, 'docs');
+const mode = process.argv.indexOf('-p') !== -1 ? 'production' : 'development';
 const production = mode === 'production';
 const development = mode === 'development';
+console.log(process.argv, 'mode', mode, 'production', production, 'development', development, 'json', json.entry);
 
-const sassPlugin = new ExtractTextPlugin({
-    filename: 'css/[name].css',
+// plugins
+const sassPlugin = new ExtractTextPlugin(development ? 'css/[name].css' : 'css/[name].[hash].css', {
+    allChunks: true
 });
 
 const sassRule = {
@@ -28,6 +33,13 @@ const sassRule = {
         // use: 'css-loader!sass-loader',
         use: [{
                 loader: "css-loader", // translates CSS into CommonJS
+                options: {
+                    sourceMap: !production,
+                    minimize: production,
+                }
+            },
+            {
+                loader: 'postcss-loader',
                 options: {
                     sourceMap: true
                 }
@@ -44,10 +56,12 @@ const sassRule = {
                     sourceMap: true
                 }
             }, */
+            'resolve-url-loader',
             {
                 loader: 'sass-loader', // compiles Sass to CSS
                 options: {
-                    sourceMap: true
+                    sourceMap: !production,
+                    minimize: production,
                 }
             },
         ],
@@ -69,16 +83,16 @@ const sassUrlResolver = {
 
 const config = {
     entry: {
-        style: './src/scss/app.scss',
-        vendors: './src/vendors/vendors.js',
-        app: './src/app/app.js',
+        style: src + 'scss/app.scss',
+        vendors: src + 'vendors/vendors.js',
+        app: src + 'app/app.js',
     },
     output: {
-        path: path.resolve(__dirname, 'docs'),
+        path: dist,
         publicPath: '/',
-        filename: development ? '[name].js' : '[name].[hash].js',
-        sourceMapFilename: development ? '[name].js.map' : '[name].[hash].js.map',
-        chunkFilename: development ? '[name].js' : '[name].chunk.[hash].js',
+        filename: development ? 'js/[name].js' : 'js/[name].[hash].js',
+        sourceMapFilename: development ? 'js/[name].js.map' : 'js/[name].[hash].js.map',
+        chunkFilename: development ? 'js/[name].js' : 'js/[name].[hash].js',
     },
     devtool: development ? 'inline-source-map' : 'source-map',
     mode: mode,
@@ -95,33 +109,33 @@ const config = {
                 test: /\.(woff|woff2|eot|ttf|svg)$/,
                 exclude: /node_modules/,
                 use: [{
+                    loader: 'file-loader',
+                    options: {
+                        useRelativePath: true,
+                        name: 'fonts/[name].[ext]',
+                    }
+                }, {
                     loader: 'url-loader',
                     options: {
                         limit: 10240,
                         mimetype: 'application/octet-stream',
                         fallback: 'file-loader',
                     }
-                }, {
-                    loader: 'file-loader',
-                    options: {
-                        useRelativePath: true,
-                        name: 'fonts/[name].[ext]',
-                    }
                 }]
             }, {
                 test: /\.(svg|jpg|jpeg|gif|png)$/,
                 exclude: /node_modules/,
                 use: [{
-                    loader: 'url-loader',
-                    options: {
-                        limit: 10240,
-                        fallback: 'file-loader',
-                    }
-                }, {
                     loader: 'file-loader',
                     options: {
                         useRelativePath: true,
                         name: 'img/[name].[ext]',
+                    }
+                }, {
+                    loader: 'url-loader',
+                    options: {
+                        limit: 10240,
+                        fallback: 'file-loader',
                     }
                 }]
             }, {
@@ -129,13 +143,20 @@ const config = {
                 use: 'raw-loader'
             }
         ]
+        /*
+        loaders.ts,
+        loaders.js,
+        loaders.html,
+        process.env.NODE_ENV === 'production' ? loaders.scssprod : loaders.scssdev,
+        loaders.fonts,
+        */
     },
     devServer: {
         open: true, // will open the browser
         hot: true, // hot module replacement. Depends on HotModuleReplacementPlugin
         inline: true, // inline module replacement.
         noInfo: true, // only errors & warns on hot reload
-        contentBase: path.join(__dirname, 'docs'), // boolean | string | array, static file location
+        contentBase: dist, // boolean | string | array, static file location
         compress: true, // enable gzip compression
         port: 9000,
         historyApiFallback: true, // true for index.html upon 404, object for multiple paths
@@ -148,12 +169,19 @@ const config = {
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
         new HtmlWebpackPlugin({
-            template: './src/index.html'
+            template: src + 'index.html',
         }),
         new webpack.SourceMapDevToolPlugin({
-            filename: '[name].js.map',
-            exclude: ['vendors.js']
+            filename: development ? 'js/[name].js.map' : 'js/[name].[hash].js.map',
+            exclude: ['vendors.js'],
         }),
+        /*
+        new StyleLintPlugin({
+            emitErrors: true,
+            failOnError: false,
+            syntax: 'scss',
+        }),
+        */
         sassPlugin,
     ],
     optimization: {
@@ -165,12 +193,17 @@ const config = {
                 uglifyOptions: {
                     compress: false,
                     ecma: 5,
-                    mangle: true
+                    mangle: true,
+                    output: {
+                        comments: false,
+                        beautify: false,
+                    }
                 },
-                sourceMap: true
+                sourceMap: false
             })
         ]
     }
+
     /*
     noParse: [
         /[\/\\]node_modules[\/\\]angular[\/\\]angular\.js$/

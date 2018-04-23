@@ -56,10 +56,9 @@ const basePlugins = [
         },
     ]),
     new ForkCheckerPlugin(),
-    new ExtractTextPlugin(process.env.NODE_ENV === 'production' ?
-        '[name].chunk.[chunkhash].css' : '[name].css', {
-            allChunks: true
-        }),
+    new ExtractTextPlugin(process.env.NODE_ENV === 'production' ? '[name].chunk.[chunkhash].css' : '[name].css', {
+        allChunks: true
+    }),
 ].concat(sourceMap);
 
 const devPlugins = [
