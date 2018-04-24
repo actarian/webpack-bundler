@@ -42,9 +42,9 @@ const config = {
         ]
     },
     output: {
-        chunkFilename: options.development ? 'js/[name].js' : 'js/[name].[hash].js',
-        filename: options.development ? 'js/[name].js' : 'js/[name].[hash].js',
-        sourceMapFilename: options.development ? 'js/[name].js.map' : 'js/[name].[hash].js.map',
+        chunkFilename: options.names.chunkFilename,
+        filename: options.names.filename,
+        sourceMapFilename: options.names.sourceMapFilename,
         path: options.dist,
         publicPath: '/',
     },

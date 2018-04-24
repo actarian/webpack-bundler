@@ -11,5 +11,11 @@ import 'slick-carousel';
 
 $(document).ready(function () {
     console.log('Hello World!');
-    $('.slider').slick();
+    $('.slider').slick({
+        dots: true,
+        arrows: true,
+        infinite: false,
+        speed: 300,
+        autoplay: true,
+    });
 });

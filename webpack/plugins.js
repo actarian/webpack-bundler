@@ -18,11 +18,11 @@ class Plugins {
             htmlWebpack: new HtmlWebpackPlugin({
                 template: options.src + 'index.html',
             }),
-            extractText: new ExtractTextPlugin(options.development ? 'css/[name].css' : 'css/[name].[hash].css', {
+            extractText: new ExtractTextPlugin(options.names.css, {
                 allChunks: true
             }),
             sourceMapDevTool: new webpack.SourceMapDevToolPlugin({
-                filename: options.development ? 'js/[name].js.map' : 'js/[name].[hash].js.map',
+                filename: options.names.sourceMapFilename,
                 exclude: ['vendors.js'],
             }),
             styleLint: new StyleLintPlugin({

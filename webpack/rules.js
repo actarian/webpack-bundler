@@ -62,7 +62,7 @@ class Rules {
                     loader: 'file-loader',
                     options: {
                         useRelativePath: false,
-                        name: options.development ? 'img/[name].[ext]' : 'img/[name].[hash].[ext]',
+                        name: options.names.images,
                     }
                 }]
             },
@@ -79,7 +79,7 @@ class Rules {
                     loader: 'file-loader',
                     options: {
                         useRelativePath: false,
-                        name: options.development ? 'fonts/[name].[ext]' : 'fonts/[name].[hash].[ext]',
+                        name: options.names.fonts,
                     }
                 }]
             },
