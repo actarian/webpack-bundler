@@ -5,15 +5,11 @@
 
 console.log('app.js');
 
-/*
 import $ from 'jquery';
-
 import 'slick-carousel';
-
-import 'bootstrap';
+// import 'bootstrap';
 
 $(document).ready(function () {
     console.log('Hello World!');
     $('.slider').slick();
 });
-*/
