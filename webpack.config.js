@@ -46,7 +46,8 @@ const config = {
         filename: options.names.filename,
         sourceMapFilename: options.names.sourceMapFilename,
         path: options.dist,
-        publicPath: '/',
+        pathinfo: true, // !!!
+        publicPath: '/webpack-bundler/',
     },
     plugins: [
         plugins.hotModuleReplacement,
