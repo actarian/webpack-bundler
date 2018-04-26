@@ -4,7 +4,7 @@
 
 class Rules {
     constructor(options, plugins) {
-        var rules = {
+        let rules = {
             sass: {
                 test: /\.(css|sass|scss)$/,
                 use: plugins.extractText.extract({
@@ -12,10 +12,22 @@ class Rules {
                     use: [{
                             loader: "css-loader", // translates CSS into CommonJS
                             options: {
+                                discardComments: {
+                                    removeAll: true,
+                                },
+                                importLoaders: 1,
+                                minimize: options.production ? {
+                                    discardComments: {
+                                        removeAll: true,
+                                    },
+                                } : false,
                                 sourceMap: true, // !options.production,
-                                minimize: options.production,
                                 url: true,
-                            }
+                            },
+                        },
+                        {
+                            loader: 'postcss-loader', // post css actions
+                            options: plugins.postCss,
                         },
                         {
                             loader: 'resolve-url-loader', // resolve url() assets resources
@@ -25,20 +37,6 @@ class Rules {
                                 debug: true,
                             }
                         },
-                        /*
-                        {
-                            loader: 'postcss-loader', // post css actions
-                            options: {
-                                plugins: function () { // post css plugins, can be exported to postcss.config.js
-                                    return [
-                                        // require('precss'),
-                                        require('autoprefixer')
-                                    ];
-                                },
-                                sourceMap: true, // !options.production,
-                            }
-                        },
-                        */
                         {
                             loader: 'sass-loader', // compiles scss to css
                             options: {
@@ -62,7 +60,9 @@ class Rules {
                     loader: 'file-loader',
                     options: {
                         useRelativePath: false,
-                        name: options.names.images,
+                        name: function (path) {
+                            return options.getName(path, options.names.images);
+                        },
                     }
                 }]
             },
@@ -79,7 +79,9 @@ class Rules {
                     loader: 'file-loader',
                     options: {
                         useRelativePath: false,
-                        name: options.names.fonts,
+                        name: function (path) {
+                            return options.getName(path, options.names.fonts);
+                        },
                     }
                 }]
             },

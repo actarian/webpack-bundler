@@ -14,16 +14,36 @@
             "sourceMapFilename": "js/[name].js.map",
             "chunkFilename": "js/[name].js",
             "css": "css/[name].css",
-            "images": "img/[name].[ext]",
-            "fonts": "fonts/[name].[ext]"
+            "images": "img/[path][name].[ext]",
+            "fonts": "fonts/[path][name].[ext]"
         },
         "production": {
             "filename": "js/[name].min.js",
             "sourceMapFilename": "js/[name].min.js.map",
             "chunkFilename": "js/[name].min.js",
             "css": "css/[name].min.css",
-            "images": "img/[name].[ext]",
-            "fonts": "fonts/[name].[ext]"
+            "images": "img/[path][name].[ext]",
+            "fonts": "fonts/[path][name].[ext]"
+        }
+    },
+    "plugins": {
+        "autoprefixer": {
+            "browsers": ["last 2 versions", "not ie 10"],
+            "flexbox": "no-2009",
+            "grid": true
+        }
+    },
+    "devServer": {
+        "port": 9000,
+        "open": true,
+        "hot": true,
+        "inline": true,
+        "compress": true,
+        "noInfo": true,
+        "historyApiFallback": true,
+        "https": false,
+        "proxy": {
+            "/api": "http://localhost:3000"
         }
     }
 }

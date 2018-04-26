@@ -13,20 +13,7 @@ const rules = new Rules(options, plugins);
 const config = {
     context: options.context,
     devtool: options.devtool,
-    devServer: {
-        open: true, // will open the browser
-        hot: true, // hot module replacement. Depends on HotModuleReplacementPlugin
-        inline: true, // inline module replacement.
-        noInfo: true, // only errors & warns on hot reload
-        contentBase: options.dist, // boolean | string | array, static file location
-        compress: true, // enable gzip compression
-        port: 9000,
-        historyApiFallback: true, // true for index.html upon 404, object for multiple paths
-        https: false, // true for self-signed, object for cert authority
-        proxy: { // proxy URLs to backend development server
-            '/api': 'http://localhost:3000'
-        },
-    },
+    devServer: options.devServer,
     entry: options.entry,
     mode: options.mode,
     module: {
@@ -51,8 +38,8 @@ const config = {
     ],
     resolve: {
         alias: options.alias,
-        extensions: ['.js', '.scss'],
-        modules: ['node_modules'],
+        extensions: options.extensions,
+        modules: options.modules,
     },
 };
 

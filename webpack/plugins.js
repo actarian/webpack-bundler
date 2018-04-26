@@ -8,8 +8,10 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-// const postcss = require('postcss');
-// const autoprefixer = require('autoprefixer');
+const cssimport = require('postcss-import');
+const cssnext = require('postcss-cssnext');
+const autoprefixer = require('autoprefixer');
+const cssnano = require('cssnano');
 
 class Plugins {
     constructor(options) {
@@ -33,8 +35,19 @@ class Plugins {
             uglifyJs: new UglifyJsPlugin({
                 cache: true,
                 parallel: true,
+                sourceMap: false,
                 uglifyOptions: {
-                    compress: false,
+                    // sourceMap: false,
+                    compress: {
+                        sequences: true,
+                        dead_code: true,
+                        conditionals: true,
+                        booleans: true,
+                        unused: true,
+                        if_return: true,
+                        join_vars: true,
+                        drop_console: true
+                    },
                     ecma: 5,
                     mangle: true,
                     output: {
@@ -42,8 +55,34 @@ class Plugins {
                         beautify: false,
                     }
                 },
-                sourceMap: false
             }),
+            postCss: {
+                ident: 'postcss',
+                plugins: function () {
+                    let list = [];
+                    if (options.plugins.cssimport) {
+                        list.push(cssimport({
+                            addDependencyTo: webpack,
+                            root: function (file) {
+                                return file.dirname;
+                            }
+                        }));
+                    }
+                    if (options.plugins.cssnext) {
+                        list.push(cssnext());
+                    }
+                    list.push(autoprefixer(options.plugins.autoprefixer));
+                    if (options.plugins.cssnano) {
+                        list.push(cssnano({
+                            safe: true,
+                            sourcemap: true,
+                            autoprefixer: false,
+                        }));
+                    }
+                    return list;
+                },
+                sourceMap: true, // !options.production,
+            }
         };
         for (var p in plugins) {
             this[p] = plugins[p];
