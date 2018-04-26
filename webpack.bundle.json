@@ -1,0 +1,13 @@
+{
+    "entry": {
+        "vendors": "vendors/vendors.js",
+        "app": "app/app.js",
+        "style": "scss/app.scss"
+    },
+    "src": "./src/",
+    "dist": "./docs/",
+    "public": "/webpack-bundler/",
+    "alias": {
+        "jquery": "jquery/src/jquery"
+    }
+}

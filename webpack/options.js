@@ -3,31 +3,40 @@
 'use strict';
 
 const path = require('path');
-const json = require('../webpack.json');
-
-const hashEnabled = false;
-const post = hashEnabled ? '[hash]' : 'min';
-const assets = hashEnabled ? '.[hash]' : '';
+const defaults = require('./defaults.json');
+const bundle = require('../webpack.bundle.json');
 
 class Options {
+
     constructor() {
-        this.context = path.resolve(__dirname, '../');
-        this.src = path.join(this.context, './src/');
-        this.dist = path.join(this.context, './docs/');
-        this.mode = process.argv.indexOf('-p') !== -1 ? 'production' : 'development';
-        this.production = this.mode === 'production';
-        this.development = this.mode === 'development';
-        this.argv = process.argv;
-        this.names = {
-            chunkFilename: this.development ? 'js/[name].js' : 'js/[name].' + post + '.js',
-            filename: this.development ? 'js/[name].js' : 'js/[name].' + post + '.js',
-            sourceMapFilename: this.development ? 'js/[name].js.map' : 'js/[name].' + post + '.js.map',
-            css: this.development ? 'css/[name].css' : 'css/[name].' + post + '.css',
-            images: this.development ? 'img/[name].[ext]' : 'img/[name]' + assets + '.[ext]',
-            fonts: this.development ? 'fonts/[name].[ext]' : 'fonts/[name]' + assets + '.[ext]',
-        };
-        console.log('Options', this.src, this.dist, this.mode);
+        const argv = process.argv;
+        const context = path.resolve(__dirname, '../');
+        const options = bundle ? Object.assign(defaults, bundle) : defaults;
+        let mode = options.mode;
+        if (argv.indexOf('-p') !== -1) mode = 'production';
+        if (argv.indexOf('-d') !== -1) mode = 'development';
+        //
+        this.context = context;
+        this.src = path.join(context, options.src);
+        this.dist = path.join(context, options.dist);
+        this.public = options.public;
+        this.mode = mode;
+        this.argv = argv;
+        this.production = mode === 'production';
+        this.development = mode === 'development';
+        this.names = options.names[mode];
+        this.alias = options.alias;
+        this.devtool = this.development ? 'inline-source-map' : 'source-map';
+        // 
+        this.entry = Object.assign({}, options.entry);
+        for (let key in this.entry) {
+            if (this.entry.hasOwnProperty(key)) {
+                this.entry[key] = this.src + this.entry[key];
+            }
+        }
+        console.log('Options', mode);
     }
+
 }
 
 module.exports = Options;

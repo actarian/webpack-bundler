@@ -12,7 +12,7 @@ const rules = new Rules(options, plugins);
 
 const config = {
     context: options.context,
-    devtool: options.development ? 'inline-source-map' : 'source-map',
+    devtool: options.devtool,
     devServer: {
         open: true, // will open the browser
         hot: true, // hot module replacement. Depends on HotModuleReplacementPlugin
@@ -27,27 +27,21 @@ const config = {
             '/api': 'http://localhost:3000'
         },
     },
-    entry: {
-        style: options.src + 'scss/app.scss',
-        vendors: options.src + 'vendors/vendors.js',
-        app: options.src + 'app/app.js',
-    },
+    entry: options.entry,
     mode: options.mode,
     module: {
         rules: [rules.sass, rules.images, rules.fonts, ]
     },
     optimization: {
-        minimizer: [
-            plugins.uglifyJs
-        ]
+        minimizer: [plugins.uglifyJs, ]
     },
     output: {
         chunkFilename: options.names.chunkFilename,
         filename: options.names.filename,
         sourceMapFilename: options.names.sourceMapFilename,
         path: options.dist,
-        pathinfo: true, // !!!
-        publicPath: '/webpack-bundler/',
+        publicPath: options.public,
+        // pathinfo: true, // !!!
     },
     plugins: [
         plugins.hotModuleReplacement,
@@ -56,9 +50,7 @@ const config = {
         plugins.extractText,
     ],
     resolve: {
-        alias: {
-            jquery: "jquery/src/jquery",
-        },
+        alias: options.alias,
         extensions: ['.js', '.scss'],
         modules: ['node_modules'],
     },

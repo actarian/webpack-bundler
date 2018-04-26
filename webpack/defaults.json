@@ -1,0 +1,29 @@
+{
+    "entry": {
+        "vendors": "vendors/vendors.js",
+        "app": "app/app.js",
+        "style": "scss/app.scss"
+    },
+    "src": "./src/",
+    "dist": "./docs/",
+    "public": "/webpack-bundler/",
+    "mode": "development",
+    "names": {
+        "development": {
+            "filename": "js/[name].js",
+            "sourceMapFilename": "js/[name].js.map",
+            "chunkFilename": "js/[name].js",
+            "css": "css/[name].css",
+            "images": "img/[name].[ext]",
+            "fonts": "fonts/[name].[ext]"
+        },
+        "production": {
+            "filename": "js/[name].min.js",
+            "sourceMapFilename": "js/[name].min.js.map",
+            "chunkFilename": "js/[name].min.js",
+            "css": "css/[name].min.css",
+            "images": "img/[name].[ext]",
+            "fonts": "fonts/[name].[ext]"
+        }
+    }
+}
