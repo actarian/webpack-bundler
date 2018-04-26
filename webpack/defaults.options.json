@@ -1,13 +1,15 @@
 {
+    "mode": "development",
+    "title": "Webpack Bundler",
+    "public": "/webpack-bundler/",
+    "src": "./src/",
+    "dist": "./docs/",
+    "icon": "./src/img/logo.png",
     "entry": {
         "vendors": "vendors/vendors.js",
         "app": "app/app.js",
         "style": "scss/app.scss"
     },
-    "src": "./src/",
-    "dist": "./docs/",
-    "public": "/webpack-bundler/",
-    "mode": "development",
     "names": {
         "development": {
             "filename": "js/[name].js",

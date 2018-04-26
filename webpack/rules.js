@@ -5,6 +5,53 @@
 class Rules {
     constructor(options, plugins) {
         let rules = {
+            fonts: {
+                test: /\.(woff|woff2|eot|ttf|svg)$/,
+                use: [{
+                    loader: 'url-loader',
+                    options: {
+                        limit: 10240,
+                        mimetype: 'application/octet-stream',
+                        fallback: 'file-loader',
+                        useRelativePath: false,
+                        name: function (path) {
+                            return options.getName(path, options.names.fonts);
+                        },
+                    }
+                }]
+            },
+            html: {
+                test: /\.(html)$/,
+                use: [{
+                    loader: 'html-loader',
+                    options: {
+                        attrs: [':data-src', 'img:src', 'link:href'], //, 'meta:content'
+                        minimize: options.production ? {
+                            removeAttributeQuotes: true,
+                            collapseWhitespace: true,
+                            html5: true,
+                            minifyCSS: true,
+                            removeComments: true,
+                            removeEmptyAttributes: true,
+                        } : false,
+                        interpolate: true,
+                    }
+                }]
+            },
+            images: {
+                test: /\.(jpg|jpeg|gif|png)$/,
+                use: [{
+                    loader: 'url-loader',
+                    options: {
+                        limit: 10240,
+                        fallback: 'file-loader',
+                        useRelativePath: false,
+                        name: function (path) {
+                            return options.getName(path, options.names.images);
+                        },
+                    }
+                }]
+            },
             sass: {
                 test: /\.(css|sass|scss)$/,
                 use: plugins.extractText.extract({
@@ -47,43 +94,6 @@ class Rules {
                     ],
                 }),
                 // exclude: /\.(eot|woff|woff2|ttf|svg)(\?[\s\S]+)?$/,
-            },
-            images: {
-                test: /\.(jpg|jpeg|gif|png)$/,
-                use: [{
-                    loader: 'url-loader',
-                    options: {
-                        limit: 10240,
-                        fallback: 'file-loader',
-                    }
-                }, {
-                    loader: 'file-loader',
-                    options: {
-                        useRelativePath: false,
-                        name: function (path) {
-                            return options.getName(path, options.names.images);
-                        },
-                    }
-                }]
-            },
-            fonts: {
-                test: /\.(woff|woff2|eot|ttf|svg)$/,
-                use: [{
-                    loader: 'url-loader',
-                    options: {
-                        limit: 10240,
-                        mimetype: 'application/octet-stream',
-                        fallback: 'file-loader',
-                    }
-                }, {
-                    loader: 'file-loader',
-                    options: {
-                        useRelativePath: false,
-                        name: function (path) {
-                            return options.getName(path, options.names.fonts);
-                        },
-                    }
-                }]
             },
         };
         for (var p in rules) {

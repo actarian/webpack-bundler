@@ -26,6 +26,8 @@ class Options {
         this.src = path.join(context, options.src);
         this.dist = path.join(context, options.dist);
         this.public = options.public;
+        this.title = options.title;
+        this.icon = options.icon;
         this.mode = mode;
         this.argv = argv;
         this.production = mode === 'production';
@@ -36,7 +38,7 @@ class Options {
         this.devtool = this.development ? 'inline-source-map' : 'source-map';
         this.devServer = options.devServer;
         this.devServer.contentBase = this.dist;
-        this.extensions = ['.js', '.scss', ];
+        this.extensions = ['.js', '.scss', '.html', ];
         this.modules = ['node_modules', ];
         // 
         this.entry = Object.assign({}, options.entry);
@@ -52,12 +54,22 @@ class Options {
         if (name.indexOf('[path]') !== -1) {
             let dirname = path.dirname(filename);
             dirname = path.normalize(dirname);
-            dirname = dirname.replace(this.context, '');
-            dirname = dirname.indexOf(path.sep) === 0 ? dirname.substr(1) : dirname;
-            if (dirname.indexOf('node_modules' + path.sep) !== -1) {
-                dirname = dirname.replace('node_modules' + path.sep, '');
+            if (dirname.indexOf(this.src) === 0) {
+                dirname = dirname.replace(this.src, '');
+                if (dirname.indexOf('img' + path.sep) === 0) {
+                    dirname = dirname.replace('img' + path.sep, '');
+                }
+                if (dirname === 'img') {
+                    dirname = '';
+                }
+            } else {
+                dirname = dirname.replace(this.context, '');
+                dirname = dirname.indexOf(path.sep) === 0 ? dirname.substr(1) : dirname;
+                if (dirname.indexOf('node_modules' + path.sep) !== -1) {
+                    dirname = dirname.replace('node_modules' + path.sep, '');
+                }
             }
-            if (dirname.lastIndexOf(path.sep) !== dirname.length - 1) {
+            if (dirname.length && dirname.lastIndexOf(path.sep) !== dirname.length - 1) {
                 dirname = dirname + path.sep;
             }
             name = name.replace('[path]', dirname);

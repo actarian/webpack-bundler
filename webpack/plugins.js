@@ -5,6 +5,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
@@ -19,6 +20,28 @@ class Plugins {
             hotModuleReplacement: new webpack.HotModuleReplacementPlugin(),
             htmlWebpack: new HtmlWebpackPlugin({
                 template: options.src + 'index.html',
+                minify: options.production,
+            }),
+            faviconWebpack: new FaviconsWebpackPlugin({
+                background: '#fff',
+                icons: {
+                    android: true,
+                    appleIcon: true,
+                    appleStartup: true,
+                    coast: false,
+                    favicons: true,
+                    firefox: true,
+                    opengraph: false,
+                    twitter: false,
+                    yandex: false,
+                    windows: false
+                },
+                inject: true,
+                logo: options.icon,
+                persistentCache: true,
+                prefix: 'img/icons/',
+                statsFilename: 'iconstats-[hash].json',
+                title: options.title,
             }),
             extractText: new ExtractTextPlugin(options.names.css, {
                 allChunks: true

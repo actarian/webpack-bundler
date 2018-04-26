@@ -17,7 +17,7 @@ const config = {
     entry: options.entry,
     mode: options.mode,
     module: {
-        rules: [rules.sass, rules.images, rules.fonts, ]
+        rules: [rules.sass, rules.html, rules.images, rules.fonts, ]
     },
     optimization: {
         minimizer: [plugins.uglifyJs, ]
@@ -33,6 +33,7 @@ const config = {
     plugins: [
         plugins.hotModuleReplacement,
         plugins.htmlWebpack,
+        plugins.faviconWebpack,
         plugins.sourceMapDevTool,
         plugins.extractText,
     ],
