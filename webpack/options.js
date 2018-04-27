@@ -38,15 +38,17 @@ class Options {
         this.devtool = this.development ? 'inline-source-map' : 'source-map';
         this.devServer = options.devServer;
         this.devServer.contentBase = this.dist;
-        this.extensions = ['.js', '.scss', '.html', ];
+        this.extensions = ['.js', '.scss', '.html'];
         this.modules = ['node_modules', ];
         // 
         this.entry = Object.assign({}, options.entry);
+        /*
         for (let key in this.entry) {
             if (this.entry.hasOwnProperty(key)) {
                 this.entry[key] = this.src + this.entry[key];
             }
         }
+        */
         console.log('Options', mode);
     }
 

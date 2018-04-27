@@ -40,17 +40,49 @@ class Rules {
             },
             images: {
                 test: /\.(jpg|jpeg|gif|png)$/,
-                use: [{
-                    loader: 'url-loader',
-                    options: {
-                        limit: 10240,
-                        fallback: 'file-loader',
-                        useRelativePath: false,
-                        name: function (path) {
-                            return options.getName(path, options.names.images);
-                        },
+                use: [
+                    /* {
+                        loader: 'url-loader',
+                        options: {
+                            limit: 10240,
+                            fallback: 'file-loader',
+                            useRelativePath: false,
+                            name: function (path) {
+                                return options.getName(path, options.names.images);
+                            },
+                        }
+                    }, */
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            useRelativePath: false,
+                            name: function (path) {
+                                return options.getName(path, options.names.images);
+                            },
+                        }
+                    }, {
+                        loader: 'image-webpack-loader',
+                        options: {
+                            mozjpeg: {
+                                progressive: true,
+                                quality: 65,
+                            },
+                            optipng: {
+                                enabled: false,
+                            },
+                            pngquant: {
+                                quality: '65-90',
+                                speed: 4,
+                            },
+                            gifsicle: {
+                                interlaced: false,
+                            },
+                            webp: {
+                                quality: 75,
+                            },
+                        }
                     }
-                }]
+                ]
             },
             sass: {
                 test: /\.(css|sass|scss)$/,
@@ -68,33 +100,47 @@ class Rules {
                                         removeAll: true,
                                     },
                                 } : false,
-                                sourceMap: true, // !options.production,
+                                sourceMap: true,
                                 url: true,
                             },
                         },
                         {
-                            loader: 'postcss-loader', // post css actions
+                            loader: 'postcss-loader',
                             options: plugins.postCss,
                         },
                         {
-                            loader: 'resolve-url-loader', // resolve url() assets resources
+                            loader: 'resolve-url-loader',
                             options: {
-                                sourceMap: true, // !options.production,
+                                debug: false,
                                 keepQuery: true,
-                                debug: true,
+                                sourceMap: true,
                             }
                         },
                         {
-                            loader: 'sass-loader', // compiles scss to css
+                            loader: 'sass-loader',
                             options: {
-                                sourceMap: true, // !options.production,
-                                minimize: options.production,
+                                // minimize: options.production,
+                                sourceMap: true,
                             }
                         },
                     ],
                 }),
                 // exclude: /\.(eot|woff|woff2|ttf|svg)(\?[\s\S]+)?$/,
             },
+            typescript: {
+                test: /\.(ts)$/,
+                use: [{
+                    loader: 'ts-loader',
+                    options: {
+                        // transpileOnly: false,
+                        logInfoToStdOut: true,
+                        // logLevel: 'warn',
+                        // silent: false,
+                        // compiler: 'typescript',
+                        // configFile: 'tsconfig.json',
+                    }
+                }]
+            }
         };
         for (var p in rules) {
             this[p] = rules[p];

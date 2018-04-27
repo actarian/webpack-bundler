@@ -17,10 +17,11 @@ const config = {
     entry: options.entry,
     mode: options.mode,
     module: {
-        rules: [rules.sass, rules.html, rules.images, rules.fonts, ]
+        rules: [rules.typescript, rules.sass, rules.html, rules.images, rules.fonts, ]
     },
     optimization: {
-        minimizer: [plugins.uglifyJs, ]
+        minimizer: [plugins.uglifyJs, ],
+        splitChunks: plugins.splitChunks,
     },
     output: {
         chunkFilename: options.names.chunkFilename,
